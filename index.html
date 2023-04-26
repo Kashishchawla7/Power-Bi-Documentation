@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <title>Document</title>
+</head>
+
+<hr>
+
+    <h2 id="second-heading-power-bi-documentation-"><strong>Power BI Documentation</strong></h2>
+    <h2 id="api-connection-with-body-">API Connection ( with Body )</h2>
+    <pre><code><span class="hljs-keyword">let</span>    
+<span class="hljs-built_in">url</span> = <span class="hljs-attribute">http</span>:<span class="hljs-comment">//api.com/endPoint, </span>
+</code></pre>
+    <p>Here will be the Api’s url </p>
+    <pre><code><span class="hljs-attr">postData</span> = <span class="hljs-string">"{
+            "</span>key1<span class="hljs-string">":value1,
+            "</span>key2<span class="hljs-string">":value2
+            }"</span>
+</code></pre>
+    <p>Here will be your Api’s Required Body </p>
+    <pre><code><span class="hljs-built_in">response</span> =Json.Document(Web.Contents(url, [Content=Text.ToBinary(postData),Headers=[#<span class="hljs-string">"Content-Type"</span>=<span class="hljs-string">"application/json"</span>]])),     
+
+<span class="hljs-keyword">in</span> 
+<span class="hljs-built_in">response</span> 
+</code></pre>
+    <p>Remember to keep your body before the Headers part otherwise it may give 500 (Internal Server Error)
+        <em>This is an Advanced Editor Query. It will fetch you the result from Api but it will be in form of a
+            Record.</em></p>
+    <p><em>To convert Record into Table with Expanded Column</em> </p>
+    <pre><code>#<span class="hljs-string">"Converted to Table"</span> = <span class="hljs-keyword">Table</span>.FromList(response, Splitter.SplitByNothing(), <span class="hljs-keyword">null</span>, <span class="hljs-keyword">null</span>, ExtraValues.Error), 
+#<span class="hljs-string">"Expanded Column1"</span> = <span class="hljs-keyword">Table</span>.ExpandRecordColumn(#<span class="hljs-string">"Converted to Table"</span>, <span class="hljs-string">"Column1"</span>, {<span class="hljs-string">"ColumnName1"</span>, <span class="hljs-string">" ColumnName2"</span>}) 
+</code></pre>
+    <p>”Expanded Column1” may vary based on result of Api. It basically contains the Column Name of your desired Table
+    </p>
+    <hr>
+    <h2 id="api-connection-with-headers-">API Connection (with Headers)</h2>
+    <p>If you put dynamic headers in the url it will give you an error while data refresh of Dynamic Data Source.</p>
+    <pre><code>    let
+    <span class="hljs-symbol">Source</span> = <span class="hljs-symbol">Json</span>.<span class="hljs-symbol">Document</span>(<span class="hljs-symbol">Web</span>.<span class="hljs-symbol">Contents</span>(<span class="hljs-string">"https://api.com/endPoint"</span> , 
+    [<span class="hljs-symbol">Query</span>=[user_id=<span class="hljs-string">"1"</span>]&amp;[<span class="hljs-symbol">TableNo</span>=<span class="hljs-string">"1"</span>]]
+    ))
+
+    in
+    <span class="hljs-symbol">Source</span>
+</code></pre>
+    <p>Rest of the steps remain same as mentioned above.</p>
+    <hr>
+    <h2 id="api-connection-using-web-model-">API Connection (using Web Model)</h2>
+    <ul>
+        <li>Use the Web data source connector</li>
+        <li>Enter the API end point plus parameters as the URL</li>
+        <li>Supply any authentication details the API requires usually works with Anonymus</li>
+        <li>Format the results of the query into a table format that can be integrated with your Power BI model.</li>
+    </ul>
+    <p>Power BI will automatically try to convert JSON results to a table format</p>
+    <hr>
+    <h1 id="power-bi-with-mongodb">Power BI With MongoDB</h1>
+    <ul>
+        <li>Install CData Driver from &#39;<a
+                href="https://www.cdata.com/drivers/mongodb/order/powerbi/">https://www.cdata.com/drivers/mongodb/order/powerbi/</a>&#39;.
+            It is only a trial version.</li>
+        <li>Then in your System search for <strong>ODBC Connector</strong>.</li>
+        <li>Then is System DSN &gt;&gt; ADD.</li>
+        <li>Choose the CData Driver.</li>
+        <li>Configure the DSN with your credentials.</li>
+        <li>In Power BI go to <strong>Get Data</strong>.In Search Bar write CData MongoDB.</li>
+        <li>Use your DSN Name.</li>
+    </ul>
+    <hr></hr>
+    <h4 id="directquery-can-be-converted-into-import-mode-">DirectQuery can be converted into Import Mode.</h4>
+    <h4 id="import-mode-cannot-be-converted-back-to-directquery-">Import Mode cannot be converted back to DirectQuery.
+    </h4>
+ 
+</body>
+
+</html>
